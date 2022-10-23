@@ -1,0 +1,2 @@
+Create the react project with typescript:
+npx create-react-app react-auth --template typescript
