@@ -10,7 +10,8 @@ export const User = () => {
             authUser?.setUser({
                 firstName: "Pas",
                 lastName: "Jtpas",
-                email: "jt@j.com"
+                email: "jt@j.com",
+                roles:["ADMIN"]
             })
        // }
     }

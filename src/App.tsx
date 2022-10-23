@@ -8,25 +8,24 @@ import { Route, Routes } from "react-router-dom";
 import Home from './pages/Home';
 import Register from './pages/Register';
 import {BrowserRouter as Router}  from "react-router-dom";
-//import { AuthUserProvider } from './user/UserContext';
 import { UserContextProvider } from './user/UserContext';
 import { User } from './user/User';
-//import { UserContext } from './user/UserContext';
+import { ThemContextProvider } from './components/context/ThemeContext';
+import { Box } from './components/context/Box';
+
 
 
 function App() {
   const [user, setUser] = useState({"firstName":"", "lastName":"","email":""})
   const [isuserAuth, setUserAuth] = useState(false)
   const [redirect, setRedirect] = useState(false)
-  const [name, setName] = useState('')
-  //const userContext = useContext(UserContext)
-
-
+  //const [name, setName] = useState('')
+  
 
 
 const logMessage = (message: string) => {
   console.log(message);
-  setName(message)
+  //setName(message)
 };
 
 
@@ -36,14 +35,15 @@ const logMessage = (message: string) => {
      
 <div className="App">
   <UserContextProvider>
+  <ThemContextProvider>
   <Router>
       <Navbar name={user.firstName} setName={function (name: any): void {
                       console.log("Setting name...", name)
-                      setName(name)
+                      //setName(name)
                       //window.location.reload();
                     }} />
            
-            
+            <Box/>
           <main className="form-signin w-100 m-auto">
           
           <Routes>
@@ -54,6 +54,8 @@ const logMessage = (message: string) => {
             
           </main>
           </Router>
+  </ThemContextProvider>
+ 
   </UserContextProvider>
       
     </div>

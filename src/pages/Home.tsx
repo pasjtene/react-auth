@@ -67,8 +67,11 @@ const Home = (props:any) => {
                           authUser?.setUser({
                               firstName:d.data.user.firstName,
                               lastName:d.data.user.lastName,
-                              email:d.data.user.email
+                              email:d.data.user.email,
+                              roles:d.data.user.roles.map((r: { name: string; })=>r.name)
                           })
+
+                          console.log("The user is .. 7 ",authUser.user)
                      // }
                     }
                 })
@@ -93,8 +96,9 @@ const Home = (props:any) => {
     return (
         <div>
 
-            {authUser?.user?.firstName.length?<span>
-                 {authUser?.user?.firstName} {authUser?.user?.lastName} {authUser?.user?.email} 
+            {authUser.user?.firstName.length?<span>
+                 {authUser.user?.firstName} {authUser?.user?.lastName} {authUser?.user?.email} 
+                  {authUser?.user?.roles.length?<div>User roles: {authUser?.user?.roles.map(r=> <div key={r}>{r}</div>)}</div>:null} 
             </span>:
             <span>
                 
