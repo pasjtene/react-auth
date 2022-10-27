@@ -11,7 +11,8 @@ export const User = () => {
                 firstName: "Pas",
                 lastName: "Jtpas",
                 email: "jt@j.com",
-                roles:["ADMIN"]
+                roles:["ADMIN"],
+                profileImagePath:""
             })
        // }
     }

@@ -12,32 +12,45 @@ export const Box = () => {
     //const theme = useContext(ThemeContext)
 
     const theme = useThemeContext()
-    /*
-    theme?.setTheme({
-        primary: {
-            main: '#fff',
-            text: '#fff'
-        },
     
-        secondary: {
-            main: '#f50057',
-            text: '#fff'
-        }
-      })  
-      */
-
-      
-
-    const changeTheme = () => {
+      const changeTheme = () => {
         theme?.setTheme({
-            bgColor: '#231942',
-            textColor: '#fff',
+            primary: {
+                color: '#fff',
+                backgroundColor: '#231942',
+                padding: '2px',
+                //fontFamily: "Sans-Serif"
+                fontFamily: "Sans-Serif",
+                border: ""
+        
+            },
+            secondary: {
+                color: "#1c1e21",
+                backgroundColor: "#CCCCCC;",
+                padding: "2px",
+                //fontFamily: "Sans-Serif"
+                fontFamily: "Sans-Serif",
+                border: "1px solid #F2F3F5"
+            }
         
           })  
      }
 
+      
+/*
+style={{  backgroundColor: theme.theme?.bgColor, color: theme.theme?.textColor, border:theme.theme?.debugBorder}}>Theme context</div>
+    const changeTheme = () => {
+        theme?.setTheme({
+            bgColor: '#231942',
+            textColor: '#fff',
+            debugBorder: 'none'
+        
+          })  
+     }
+*/
 
 
           
-    return <div onClick={changeTheme}   style={{backgroundColor: theme.theme?.bgColor, color: theme.theme?.textColor}}>Theme context</div>
+    return <div onClick={changeTheme}  style={{ ...theme.theme?.primary}}>Theme context</div> 
+    
 }

@@ -14,6 +14,7 @@ export type Authuser = {
     lastName: string
     email: string
     roles: string[]
+    profileImagePath: string
 }
 
 type UserContextType = {

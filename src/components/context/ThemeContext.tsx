@@ -6,10 +6,33 @@ export function useThemeContext() {
     return useContext(ThemeContext)
 }
 
-export type Theme ={
+/*
+export type ThemeSave ={
     bgColor: string,
-    textColor: string
+    textColor: string,
+    debugBorder: string
 
+}
+*/
+export type Theme ={
+    primary: {
+        color: string,
+        backgroundColor: string,
+        padding: string,
+        //fontFamily: "Sans-Serif"
+        fontFamily: string,
+        border: string
+
+    },
+    secondary: {
+        color: string,
+        backgroundColor: string,
+        padding: string,
+        //fontFamily: "Sans-Serif"
+        fontFamily: string,
+        border: string
+    }
+    
 }
 
 

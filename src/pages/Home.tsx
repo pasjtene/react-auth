@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 //import { useAuthuser } from "../user/UserContext";
 import Cookies from 'js-cookie';
 import {  useAuthuser } from "../user/UserContext";
+import UserProfile from "./UserProfile";
 
 
 const Home = (props:any) => {
@@ -12,7 +13,7 @@ const Home = (props:any) => {
    const authUser = useAuthuser();
     //const userContext = useContext(UserContext2)
    
-
+    const isUserAuth = ():number =>  authUser.user?.firstName?.length || props.user?.firstName?.length
 
    useEffect(()=>{
 
@@ -68,7 +69,8 @@ const Home = (props:any) => {
                               firstName:d.data.user.firstName,
                               lastName:d.data.user.lastName,
                               email:d.data.user.email,
-                              roles:d.data.user.roles.map((r: { name: string; })=>r.name)
+                              roles:d.data.user.roles.map((r: { name: string; })=>r.name),
+                              profileImagePath: d.data.user.profileImagePath
                           })
 
                           console.log("The user is .. 7 ",authUser.user)
@@ -96,9 +98,12 @@ const Home = (props:any) => {
     return (
         <div>
 
-            {authUser.user?.firstName.length?<span>
-                 {authUser.user?.firstName} {authUser?.user?.lastName} {authUser?.user?.email} 
+            {isUserAuth()?<span>
+                 {authUser.user?.firstName} {authUser?.user?.lastName} {authUser?.user?.email} {props.user?.lastName}
                   {authUser?.user?.roles.length?<div>User roles: {authUser?.user?.roles.map(r=> <div key={r}>{r}</div>)}</div>:null} 
+            
+            
+            <UserProfile/>
             </span>:
             <span>
                 

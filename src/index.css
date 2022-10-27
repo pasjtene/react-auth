@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.imgthumbnail {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+}
+
+.imgthumbnail:hover {
+  cursor: pointer;
+}
+
+.imgthumbnaillg {
+  width: 245px;
+  height: 245px;
+  border-radius: 50%;
+}
+
+.imgthumbnaillg:hover {
+  cursor: pointer;
+}

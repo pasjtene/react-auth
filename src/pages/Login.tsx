@@ -50,7 +50,8 @@ const Login =()=> {
                         firstName: d.data.user.firstName,
                         lastName: d.data.user.lastName,
                         email: d.data.user.email,
-                        roles: d.data.user.roles.map((r: { name: string; })=>r.name)
+                        roles: d.data.user.roles.map((r: { name: string; })=>r.name),
+                        profileImagePath: d.data.user.profileImagePath
                     })
                // }
 
