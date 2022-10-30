@@ -5,6 +5,7 @@ import { useAuthuser } from "../user/UserContext";
 
 import { json } from "stream/consumers";
 import Home from "./Home";
+import AppService from "../services/AppService";
 
 const Login =()=> {
     const [password, setPassword] = useState("")
@@ -23,7 +24,7 @@ const Login =()=> {
     const submit = async (e:SyntheticEvent) => {
         e.preventDefault()
 
-        const response = await fetch("http://localhost:8086/api/authenticate", {
+        const response = await fetch(AppService.app_url("/api/authenticate"), {
             method: 'POST',
             headers: {"Content-Type":"application/json"},
             credentials: 'include',
