@@ -94,13 +94,11 @@ const logMessage = (message: string) => {
   <UserContextProvider>
   <ThemContextProvider>
   <Router>
-      <Navbar user={user}   name={user.firstName} setName={function (name: any): void {
-                      
-                    }}  />
-           
-            <Box/>
-
-            
+      <Navbar user={user}
+              name={user.firstName}
+              setName={function (name: any): void {}} 
+      />               
+            <Box/>         
             <div className="row">
               <div className="col-2 align-self-start">
                 <LeftNav user={user}/>
@@ -127,7 +125,11 @@ const logMessage = (message: string) => {
   );
 }
 
-export default App;             
+export default App; 
+            
+
+            
+                       
                      
                  
           
