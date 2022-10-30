@@ -21,17 +21,12 @@ import Task from './components/task/Task';
 import Cookies from 'js-cookie';
 
 
-
-
 function App() {
   const [user, setUser] = useState({} as Authuser)
   const [isuserAuth, setUserAuth] = useState(false)
   const [redirect, setRedirect] = useState(false)
   const authUser = useAuthuser();
-  //const [name, setName] = useState('')
-
-
-
+  
   useEffect(()=>{
     (
         async () => fetch("http://localhost:8086/api/user", {
@@ -67,7 +62,7 @@ function App() {
                     }
                 })
             } else {
-                console.log("User not found")
+                //console.log("User not found")
                 //setName('')
             }
         }).catch(err=>{
@@ -87,45 +82,45 @@ const logMessage = (message: string) => {
 
 
   return (
- 
+    <div className="App">
+    <UserContextProvider>
+    <ThemContextProvider>
+    <Router>
+        <Navbar user={user}
+                name={user.firstName}
+                setName={function (name: any): void {}} 
+        />               
+              <Box/>         
+              <div className="row">
+                <div className="col-2 align-self-start">
+                  <LeftNav user={user}/>
+                </div>
+                  <div className="col-10" style={{backgroundColor: "rgba(0, 0, 0, .1)"}}>
+                  <Routes>
+                        <Route path="/" element={ <Home user={user}/>} />
+                        <Route path="/login" element={<Login/>} />
+                        <Route path="/register" element={<Register/>} />
+                        <Route path="/settings" element={<Settings  user={user}/>} />
+                        <Route path="/profile" element={<UserProfile  user={user} page={"profile"}/>} />
+                        <Route path="/tasks" element={<Task  user={user}/>} />
+                        <Route path="*" element={<NoPage user={user}/>} />
+                      </Routes>
+                      </div>
+              </div>      
+              </Router>
+    </ThemContextProvider>
+   
+    </UserContextProvider>
+        
+      </div>
+  
+    );
+  }
+  
+  export default App; 
    
      
-<div className="App">
-  <UserContextProvider>
-  <ThemContextProvider>
-  <Router>
-      <Navbar user={user}
-              name={user.firstName}
-              setName={function (name: any): void {}} 
-      />               
-            <Box/>         
-            <div className="row">
-              <div className="col-2 align-self-start">
-                <LeftNav user={user}/>
-              </div>
-                <div className="col-10" style={{backgroundColor: "rgba(0, 0, 0, .1)"}}>
-                <Routes>
-                      <Route path="/" element={ <Home user={user}/>} />
-                      <Route path="/login" element={<Login/>} />
-                      <Route path="/register" element={<Register/>} />
-                      <Route path="/settings" element={<Settings  user={user}/>} />
-                      <Route path="/profile" element={<UserProfile  user={user} page={"profile"}/>} />
-                      <Route path="/tasks" element={<Task  user={user}/>} />
-                      <Route path="*" element={<NoPage user={user}/>} />
-                    </Routes>
-                    </div>
-            </div>      
-            </Router>
-  </ThemContextProvider>
- 
-  </UserContextProvider>
-      
-    </div>
 
-  );
-}
-
-export default App; 
             
 
             
