@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Cookies from 'js-cookie';
 import {  useAuthuser } from "../user/UserContext";
 import UserProfile from "./UserProfile";
+import AppService from "../services/AppService";
 
 
 const Home = (props:any) => {
@@ -29,7 +30,7 @@ const Home = (props:any) => {
 
    useEffect(()=>{
     (
-        async () => fetch("http://localhost:8086/api/user", {
+        async () => fetch(AppService.app_url("/api/user"), {
             headers: {'Content-Type':'application/json'},
             credentials: 'include'
         }).then(resp => {
@@ -70,13 +71,7 @@ const Home = (props:any) => {
     )();
 },[])
 
-
-   
-   
  //f`ollowing can be omited in order to just use the user in global context
-   
-
-
     return (
         <div>
 
