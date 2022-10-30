@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 
 
 import { Authuser, useAuthuser } from "../../user/UserContext";
+import AppService from "../../services/AppService";
  
 const LOCAL_TASKS_URL = "http://localhost:8086/api/user/tasks";
 const TASKS_URL = "http://51.68.196.188:8080/talodu/api/user/tasks";
@@ -22,7 +23,6 @@ const [doneList, setDoneList] = useState<ITask[]>([])
 const [taskToDel, setTaskToDel] = useState<ITask[]>([])
 
 const [istaskSet, setTaskSet] = useState(false)
-//const [user, setUser] = useState({})
 const [user, setUser] = useState({} as Authuser)
 const [user2, setUser2] = useState({})
 
@@ -69,27 +69,8 @@ useEffect(()=> {
             console.log("The todo list is...1999", todoList)
         }
         
-        console.log("The todo list is...19", todoList)
-
-        
-        //JSON.stringify(user.tasks)?
-      //setTodoList([...todoList, ...userTask])
-
-        console.log("The todo list", todoList)
-
-        console.log("The todo list 2", dparsed)
-
-        console.log("The user is  222", user)
-
-        console.log("The todo list 4", todoList)
-
     } 
 
-    
-
-    console.log("The auth user..",authUser  )
-    console.log("Is auth?..",isUserAuth)
-    console.log("User propos ? ", props.user?.firstName )
     if(authUser.user?.firstName?.length) setUser(authUser.user) 
     if(props.user?.firstName?.length) setUser(props.user) 
 
@@ -100,7 +81,7 @@ useEffect(()=> {
     //if(props.user?.email?.length)
     if(user?.email?.length)
     try {
-        const usertasks = axios.post(LOCAL_TASKS_URL , user.email || authUser.user?.email,
+        const usertasks = axios.post(AppService.app_url("/api/user/tasks"), user.email || authUser.user?.email,
             {
                  headers: { 'Content-Type': 'application/json'}
          
@@ -162,8 +143,6 @@ const addTaskToDel = (ttd:ITask):void => {
     setTaskToDel([...taskToDel,ttd])
    }
 
-
-    //setTaskToDel([...taskToDel, ttd])
 }
 
 /**
@@ -180,10 +159,6 @@ const addTaskToDel = (ttd:ITask):void => {
 }
 
 const addTask = ():void => {
-    //console.log("The tasks...",props.user.tasks[0].id)
-
-    console.log("The tasks...user ", user)
-
 
    const td = props.user.tasks.map((e:ITask)=>{
     setTodoList([...todoList, e])
@@ -193,11 +168,6 @@ const addTask = ():void => {
             if(td.length>todoList.length)
             todoList.push(e)
         })
-
-    //setTodoList([...todoList, ...td])
-
-        console.log(td.length)
-        console.log(todoList.length)
     
     const newTask =  {
         //id: getRandomInt(1,1000),
@@ -214,33 +184,22 @@ const addTask = ():void => {
 
 
     const newTask2 =  {
-        
         name: taskName,
         deadLine: deadLine,
-        user: user
-        
+        user: user  
     }
 
     if(user?.email?.length)
     {
         try {
-            const usertasks = axios.post(SAVE_LOCAL_TASKS_URL+"/"+user.email , newTask2,
+            const usertasks = axios.post(AppService.app_url("/api/user/addtask")+"/"+user.email , newTask2,
                 {
                      headers: { 'Content-Type': 'application/json'}
              
                });
     
                usertasks.then((response) => {
-                console.log("The response... ", response )
-                    console.log("The user tasks ", JSON.parse(JSON.stringify(response.data.data)) )
-    
                     const dt = JSON.parse(JSON.stringify(response.data.data.tasks))
-    
-                    //dt.forEach(addTask3)
-    
-                    //addTask2(dt)
-                    //setTodoList([...todoList, ...dt])
-                    //setTodoList[...todoList, ...response.data.data.tasks ]
                })
     
         } catch(err) {
@@ -248,10 +207,7 @@ const addTask = ():void => {
         }
     } else {
         console.log("Cannot save task to back end")
-    }
-
-
-    
+    }    
 }
 
 
