@@ -19,6 +19,7 @@ import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
 import Task from './components/task/Task';
 import Cookies from 'js-cookie';
+import AppService from './services/AppService';
 
 
 function App() {
@@ -29,16 +30,16 @@ function App() {
   
   useEffect(()=>{
     (
-        async () => fetch("http://localhost:8086/api/user", {
+        async () => fetch(AppService.app_url("/api/user"), {
             headers: {'Content-Type':'application/json'},
             credentials: 'include'
         }).then(resp => {
-            console.log()
+            
             const contentType = resp.headers.get("content-type")
             if (contentType && contentType.indexOf("application/json") !== -1) {
-                console.log("the resp", resp)
+                
                 resp.json().then(d=> {
-                    console.log("the resp d", d.data)
+                    
                     Cookies.set("uid",   d.data.user.id , { path: '' });
                     Cookies.set("utasks",   JSON.stringify(d.data.user), { path: '' });
 
@@ -58,7 +59,7 @@ function App() {
                         })
 
                           console.log("The user is .. 7 ",authUser.user)
-                     // }
+                  
                     }
                 })
             } else {

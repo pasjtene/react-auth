@@ -38,8 +38,6 @@ const isUserAuth = ():number =>  authUser.user?.firstName?.length || props.user?
 useEffect(()=>{
     if(authUser.user?.firstName?.length) setUser(authUser.user) 
     if(props.user?.firstName?.length) setUser(props.user) 
-
-    console.log("The theme is ",theme)
     
 })
 
