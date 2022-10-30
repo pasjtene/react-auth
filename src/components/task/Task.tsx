@@ -160,11 +160,11 @@ const addTaskToDel = (ttd:ITask):void => {
 
 const addTask = ():void => {
 
-   const td = props.user.tasks.map((e:ITask)=>{
+   const td = props?.user?.tasks?.map((e:ITask)=>{
     setTodoList([...todoList, e])
     })
 
-        const td2 = props.user.tasks.map((e:ITask)=>{
+        const td2 = props?.user?.tasks?.map((e:ITask)=>{
             if(td.length>todoList.length)
             todoList.push(e)
         })
