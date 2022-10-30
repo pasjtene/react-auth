@@ -47,9 +47,6 @@ function App() {
                     Cookies.set("uid",   d.data.user.id , { path: '' });
                     Cookies.set("utasks",   JSON.stringify(d.data.user), { path: '' });
 
-                    //Cookies.set('name', 'value', { path: '' })
-
-
                     setUser(d.data.user);
                     //setName(d.data.user.firstName)
                     if(d.data.user.id) {
@@ -98,9 +95,7 @@ const logMessage = (message: string) => {
   <ThemContextProvider>
   <Router>
       <Navbar user={user}   name={user.firstName} setName={function (name: any): void {
-                      console.log("Setting name...", name)
-                      //setName(name)
-                      //window.location.reload();
+                      
                     }}  />
            
             <Box/>
@@ -111,29 +106,18 @@ const logMessage = (message: string) => {
                 <LeftNav user={user}/>
               </div>
                 <div className="col-10" style={{backgroundColor: "rgba(0, 0, 0, .1)"}}>
-
-                 
-          
-                    <Routes>
+                <Routes>
                       <Route path="/" element={ <Home user={user}/>} />
                       <Route path="/login" element={<Login/>} />
                       <Route path="/register" element={<Register/>} />
                       <Route path="/settings" element={<Settings  user={user}/>} />
                       <Route path="/profile" element={<UserProfile  user={user} page={"profile"}/>} />
                       <Route path="/tasks" element={<Task  user={user}/>} />
-                      
-                      
-                      
                       <Route path="*" element={<NoPage user={user}/>} />
                     </Routes>
-            
-               
-                
-              </div>
-            </div>
-                
-            
-          </Router>
+                    </div>
+            </div>      
+            </Router>
   </ThemContextProvider>
  
   </UserContextProvider>
@@ -143,4 +127,15 @@ const logMessage = (message: string) => {
   );
 }
 
-export default App;
+export default App;             
+                     
+                 
+          
+                   
+            
+               
+                
+             
+                
+            
+         
