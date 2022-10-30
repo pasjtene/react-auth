@@ -9,7 +9,7 @@ const Home = (props:any) => {
     const [user, setUser] = useState({"firstName":"", "lastName":"","email":""})
     const [isuserAuth, setUserAuth] = useState(false)
     const[isReloaded, setReloaded] = useState('')
-    const[login, setLogin] = useState('false')
+    
    const authUser = useAuthuser();
     //const userContext = useContext(UserContext2)
    
@@ -23,25 +23,6 @@ const Home = (props:any) => {
 
     console.log("The rrloaded is ", reloaded );
 
-/*
-    setTimeout(() => {
-        if(reloaded  != "true"){
-
-            console.log("Setting reloaded ", reloaded );
-            
-            //The cookie is set to false on login. The is to make sure we reload only once
-            Cookies.set("reloaded", "true");
-            setLogin("true")
-           // window.history.pushState({}, null, "/api/login");
-
-           //We need to reload to update the user in global context
-            window.location.reload();
-            
-        } 
-        
-        }, 1000)
-
-        */
 
    },[isReloaded])
 
@@ -70,7 +51,8 @@ const Home = (props:any) => {
                               lastName:d.data.user.lastName,
                               email:d.data.user.email,
                               roles:d.data.user.roles.map((r: { name: string; })=>r.name),
-                              profileImagePath: d.data.user.profileImagePath
+                              profileImagePath: d.data.user.profileImagePath,
+                              tasks:d.data.user.tasks
                           })
 
                           console.log("The user is .. 7 ",authUser.user)

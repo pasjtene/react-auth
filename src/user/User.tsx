@@ -1,5 +1,6 @@
 import { useContext } from "react"
 import { UserContext, useAuthuser } from "./UserContext"
+import { ITask } from "../components/task/taskinterface"
 
 
 export const User = () => {
@@ -12,9 +13,19 @@ export const User = () => {
                 lastName: "Jtpas",
                 email: "jt@j.com",
                 roles:["ADMIN"],
-                profileImagePath:""
+                profileImagePath:"",
+                tasks: []
             })
        // }
+    }
+
+    const user = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        roles: [],
+        profileImagePath: "",
+        tasks: []
     }
     
     const handleLogout = () => {

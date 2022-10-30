@@ -40,18 +40,16 @@ const Login =()=> {
                 console.log("Received auth data ..message ..", d.message ); 
                 console.log("Received auth data .. ..", d.statusCode); 
                 setUser(d.data.user);
-                //setUser2(d.data.user);
-                //let authUser:Authuser
+                    Cookies.set("uid",   d.data.user.id , { path: '' });
+                    Cookies.set("utasks",   JSON.stringify(d.data.user), { path: '' });
 
-
-                //if(userContext ) {
-                    //console.log("The usercontext is...",authUser)
                     authUser.setUser({
                         firstName: d.data.user.firstName,
                         lastName: d.data.user.lastName,
                         email: d.data.user.email,
                         roles: d.data.user.roles.map((r: { name: string; })=>r.name),
-                        profileImagePath: d.data.user.profileImagePath
+                        profileImagePath: d.data.user.profileImagePath,
+                        tasks:d.data.user.tasks
                     })
                // }
 
@@ -69,7 +67,7 @@ const Login =()=> {
             }
 
             )
-            console.log("Received auth data", resp);
+            //console.log("Received auth data", resp);
 
 
             
@@ -89,7 +87,7 @@ const Login =()=> {
 
     return (
         <div>
-            <main className="form-signin w-100 m-auto">
+            <main className="form-signin form-signin-size w-100 m-auto">
                 <form onSubmit={submit}>
                     <h1 className="h3 mb-3 fw-normal">{authMessage}</h1>
                     <div className="form-floating">

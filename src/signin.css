@@ -1,7 +1,12 @@
 
 
-.form-signin {
+.form-signin-size {
   max-width: 330px;
+  padding: 15px;
+}
+
+.form-register-size {
+  max-width: 600px;
   padding: 15px;
 }
 

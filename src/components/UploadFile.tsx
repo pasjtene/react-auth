@@ -42,7 +42,8 @@ const UploadFile  = (props:any) => {
                 lastName: props.user.lastName,
                 email: props.user.email,
                 roles: props.user.roles.map((r: { name: string; })=>r.name),
-                profileImagePath: props.user.profileImagePath
+                profileImagePath: props.user.profileImagePath,
+                tasks: props.user.tasks
             })
         }
       
@@ -89,9 +90,9 @@ const UploadFile  = (props:any) => {
 
                 onUploadProgress: e => {
                     console.log("loaded progress " +  Math.round (e.total?(e.loaded / e.total)*100:0) + "%");
-                    //this.setState({progress: Math.round ((e.loaded / e.total)*100) });
+                    
                     updateProgress(Math.round (e.total?(e.loaded / e.total)*100:0));
-                    //setProgress(Math.round ((e.loaded / e.total)*100));
+                    
                 }
             }
             );
@@ -107,7 +108,8 @@ const UploadFile  = (props:any) => {
                         lastName: resp.data.lastName,
                         email: resp.data.email,
                         roles: resp.data.roles.map((r: { name: string; })=>r.name),
-                        profileImagePath: resp.data.profileImagePath
+                        profileImagePath: resp.data.profileImagePath,
+                        tasks: resp.data.tasks
 
 
                     })
@@ -119,12 +121,7 @@ const UploadFile  = (props:any) => {
 
                 //this.setState({result: "File uploaded successfully"});
                 setUploadResult("File uploaded successfully")
-                //this.setState({profileImagePath: resp.data.profileImagePath });
-                //setProfileImagePath("../img/Photo-ID-2.jpg");
                
-
-                //const jm = [];
-                //userImages.push(resp.data.profileImagePath)
                 
                 }
 
@@ -164,11 +161,6 @@ const UploadFile  = (props:any) => {
 
             );
 
-           // setUploadResult(resp?.status);
-
-                //userImages.push(resp.data.profileImagePath);
-                //updateUser(resp.data);
-               // setUpdatedUser(resp.data);
 
             } catch (err) {
 

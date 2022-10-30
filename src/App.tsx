@@ -17,6 +17,8 @@ import NoPage from './pages/NoPage';
 import FontAwesome from 'react-fontawesome';
 import Settings from './pages/Settings';
 import UserProfile from './pages/UserProfile';
+import Task from './components/task/Task';
+import Cookies from 'js-cookie';
 
 
 
@@ -42,27 +44,25 @@ function App() {
                 console.log("the resp", resp)
                 resp.json().then(d=> {
                     console.log("the resp d", d.data)
+                    Cookies.set("uid",   d.data.user.id , { path: '' });
+                    Cookies.set("utasks",   JSON.stringify(d.data.user), { path: '' });
+
+                    //Cookies.set('name', 'value', { path: '' })
+
+
                     setUser(d.data.user);
                     //setName(d.data.user.firstName)
                     if(d.data.user.id) {
                         setUserAuth(true);
-                        //setName(d.data.user.firstName)
-                       // if(userContext || d.data.user.id) {
-                         // console.log("The usercontext is...",userContext)
-                         /*
-                          authUser?.setUser({
-                              firstName:d.data.user.firstName,
-                              lastName:d.data.user.lastName,
-                              email:d.data.user.email,
-                              roles:d.data.user.roles.map((r: { name: string; })=>r.name)
-                          })
-*/
+                       
+                         
                           setUser({
                             firstName:d.data.user.firstName,
                             lastName:d.data.user.lastName,
                             email: d.data.user.email,
                             roles: d.data.user.roles.map((r: { name: string; })=>r.name),
-                            profileImagePath: d.data.user.profileImagePath
+                            profileImagePath: d.data.user.profileImagePath,
+                            tasks: d.data.user.tasks
                         })
 
                           console.log("The user is .. 7 ",authUser.user)
@@ -120,6 +120,8 @@ const logMessage = (message: string) => {
                       <Route path="/register" element={<Register/>} />
                       <Route path="/settings" element={<Settings  user={user}/>} />
                       <Route path="/profile" element={<UserProfile  user={user} page={"profile"}/>} />
+                      <Route path="/tasks" element={<Task  user={user}/>} />
+                      
                       
                       
                       <Route path="*" element={<NoPage user={user}/>} />
@@ -132,19 +134,11 @@ const logMessage = (message: string) => {
                 
             
           </Router>
-
-
-
   </ThemContextProvider>
  
   </UserContextProvider>
       
     </div>
-
-    
-    
-    
-   
 
   );
 }

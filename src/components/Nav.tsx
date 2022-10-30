@@ -4,6 +4,8 @@ import { Link, Navigate } from "react-router-dom";
 import Login from "../pages/Login";
 import {  Authuser, useAuthuser } from "../user/UserContext";
 import { useThemeContext } from "./context/ThemeContext";
+import Cookies from "js-cookie";
+import UserService from "../services/UserService";
 
 
  const Navbar = (props:{user: Authuser, name: String, setName:(name: any) => void}) => {
@@ -71,7 +73,7 @@ import { useThemeContext } from "./context/ThemeContext";
             },
             secondary: {
                 color: stextc||'#6c757d',
-                backgroundColor: sbgcolor || "#CCCCCC;",
+                backgroundColor: sbgcolor || "#CCCCCC",
                 padding: padding || "2px",
                 //fontFamily: "Sans-Serif"
                 fontFamily: fontFamily || "Sans-Serif",
@@ -85,49 +87,15 @@ import { useThemeContext } from "./context/ThemeContext";
      }
 
 
-
-    const logout = async (e:SyntheticEvent) => {
+     const logout =(e:SyntheticEvent) => {
+        console.log("The logout event ..",e)
         authUser.setUser(null)
         props.user.firstName = ""
+        Cookies.remove('uid', { path: '' })
+        Cookies.remove('utasks', { path: '' })
+        return UserService.logOut();
+     }
 
-        const response = await fetch("http://localhost:8086/api/logout", {
-            method: 'POST',
-            headers: {"Content-Type":"application/json"},
-            credentials: 'include',
-            body: JSON.stringify({
-                email
-                
-            })
-        }).then(resp => {
-            props.setName('a')
-            
-            const contentType = resp.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-            resp.json().then(d => {
-                
-                if(d.statusCode== 200) {
-                    setRedirect(true)
-                    
-                } else {
-                    //setAuthMessage("Logout failed")
-                }
-            }
-
-            )
-            console.log("Received auth data", resp);
-
-        } else {
-            console.log("Authenthication failed")
-            props.setName('a')
-            setName('a')
-        }
-           
-        }).catch(err => {
-            console.log("Authenthication failed")
-            props.setName('a')
-            setName('a')
-        })
-    }
 
  
             if(authUser?.user?.firstName?.length || props?.user?.firstName?.length  )   {
@@ -176,7 +144,9 @@ import { useThemeContext } from "./context/ThemeContext";
                         data-pbg="#533747"
                         data-pcolor="#fff"
                         data-scolor="#fff"
-                        style={{backgroundColor:"#533747", color:"#fff"}} onClick={(e)=>{chanTheme(e)}} href="#">Theme 1</a></li>
+                        style={{backgroundColor:"#533747", color:"#fff"}} 
+                        onClick={(e)=>{chanTheme(e)}} href="#">Theme 1</a>
+                        </li>
                         
                         
                         <li><a className="dropdown-item" id="#5465ff" 
@@ -185,16 +155,14 @@ import { useThemeContext } from "./context/ThemeContext";
                          data-pbg="#AAC9FF"
                          data-pcolor="#000"
                          data-scolor="#000"
-                        
-                        
-                        style={{backgroundColor:"#AAC9FF", color:"#000"}}  onClick={(e)=>{chanTheme(e)}}  href="#">theme 2</a></li>
+                        style={{backgroundColor:"#AAC9FF", color:"#000"}}  
+                        onClick={(e)=>{chanTheme(e)}}  href="#">theme 2</a>
+                        </li>
                        
-                       
-                       
-                       
-                       
-                        <li><a className="dropdown-item" id="#463f3a" style={{backgroundColor:"#463f3a", color:"#fff"}} 
-                        onClick={(e)=>{chanTheme(e)}} href="#">theme 3</a></li>
+                        <li><a className="dropdown-item" id="#463f3a" 
+                        style={{backgroundColor:"#463f3a", color:"#fff"}} 
+                        onClick={(e)=>{chanTheme(e)}} href="#">theme 3</a>
+                        </li>
 
                         <li><a className="dropdown-item" id="#386641"
                         data-color="#fff"
@@ -210,7 +178,8 @@ import { useThemeContext } from "./context/ThemeContext";
                         <li><a className="dropdown-item" id="#000" style={{backgroundColor:"#000", color:"#fff"}} 
                         onClick={(e)=>{chanTheme(e)}} href="#">theme 5</a></li> 
 
-                        <li><a className="dropdown-item" id="#f7f7f2" data-color="#000"  style={{backgroundColor:"#dad7cd", color:"#000"}} 
+                        <li><a className="dropdown-item" id="#f7f7f2" data-color="#000"  
+                        style={{backgroundColor:"#dad7cd", color:"#000"}} 
                         onClick={(e)=>{chanTheme(e)}} href="#000">theme 6</a>
                         </li>
 
@@ -220,7 +189,8 @@ import { useThemeContext } from "./context/ThemeContext";
                         data-pbg="#F2F3F5"
                         data-pcolor="#000"
                         data-scolor="#000"
-                         data-border="2px solid red"  style={{backgroundColor:"#f7f7f2", color:"#000", border:"2px solid red"}} 
+                         data-border="2px solid red"  
+                         style={{backgroundColor:"#f7f7f2", color:"#000", border:"2px solid red"}} 
                         onClick={(e)=>{chanTheme(e)}} href="#000">debug theme </a>
                         </li> 
 
@@ -267,19 +237,72 @@ import { useThemeContext } from "./context/ThemeContext";
                     Select theme
                     </button>
                     <ul className="dropdown-menu"> 
-                        <li id={"#5f0f40"}><a className="dropdown-item" id={"#5f0f40"} style={{backgroundColor:"#5f0f40", color:"#fff"}} onClick={(e)=>{chanTheme(e)}} href="#">Theme 1</a></li>
-                        <li><a className="dropdown-item" id="#5465ff" style={{backgroundColor:"#5465ff", color:"#fff"}}  onClick={(e)=>{chanTheme(e)}}  href="#">theme 2</a></li>
-                        <li><a className="dropdown-item" id="#463f3a" style={{backgroundColor:"#463f3a", color:"#fff"}} 
-                        onClick={(e)=>{chanTheme(e)}} href="#">theme 3</a></li>
+                    <li id={"#5f0f40"}><a className="dropdown-item" id={"#5f0f40"} 
 
-                        <li><a className="dropdown-item" id="#386641" style={{backgroundColor:"#386641", color:"#fff"}} 
+                        data-color="#fff"
+                        data-sbg="#5f506b"
+                        data-pbg="#533747"
+                        data-pcolor="#fff"
+                        data-scolor="#fff"
+                        style={{backgroundColor:"#533747", color:"#fff"}} 
+                        onClick={(e)=>{chanTheme(e)}} href="#">Theme 1</a>
+                        </li>
+
+
+                        <li><a className="dropdown-item" id="#5465ff" 
+                        data-color="#000"
+                        data-sbg="#ECF3FF"
+                        data-pbg="#AAC9FF"
+                        data-pcolor="#000"
+                        data-scolor="#000"
+                        style={{backgroundColor:"#AAC9FF", color:"#000"}}  
+                        onClick={(e)=>{chanTheme(e)}}  href="#">theme 2</a>
+                        </li>
+
+                        <li><a className="dropdown-item" id="#463f3a" 
+                        style={{backgroundColor:"#463f3a", color:"#fff"}} 
+                        onClick={(e)=>{chanTheme(e)}} href="#">theme 3</a>
+                        </li>
+
+                        <li><a className="dropdown-item" id="#386641"
+                        data-color="#fff"
+                        data-sbg="#cad2c5"
+                        data-pbg="#84a98c"
+                        data-pcolor="#000"
+                        data-scolor="#000"
+                        
+                        
+                        style={{backgroundColor:"#84a98c", color:"#000"}} 
                         onClick={(e)=>{chanTheme(e)}} href="#">theme 4</a></li>
 
-                        <li><a className="dropdown-item" id="#000" style={{backgroundColor:"#000", color:"#fff"}} 
+<li><a className="dropdown-item" id="#000" style={{backgroundColor:"#000", color:"#fff"}} 
                         onClick={(e)=>{chanTheme(e)}} href="#">theme 5</a></li> 
 
-                        <li><a className="dropdown-item" id="#f7f7f2" data-color="#000"  style={{backgroundColor:"#f7f7f2", color:"#000"}} 
-                        onClick={(e)=>{chanTheme(e)}} href="#000">theme 5</a></li> 
+                        <li><a className="dropdown-item" id="#f7f7f2" data-color="#000"  
+                        style={{backgroundColor:"#dad7cd", color:"#000"}} 
+                        onClick={(e)=>{chanTheme(e)}} href="#000">theme 6</a>
+                        </li>
+
+                        <li><a className="dropdown-item" id="#f7f7f2" 
+                        data-color="#000"
+                        data-sbg="#CCCCCC"
+                        data-pbg="#F2F3F5"
+                        data-pcolor="#000"
+                        data-scolor="#000"
+                         data-border="2px solid red"  
+                         style={{backgroundColor:"#f7f7f2", color:"#000", border:"2px solid red"}} 
+                        onClick={(e)=>{chanTheme(e)}} href="#000">debug theme </a>
+                        </li> 
+
+                        <li><a className="dropdown-item" id="#f7f7f2" 
+                        data-color="#000"
+                        data-sbg="#DADDE1"
+                        data-pbg="#F2F3F5"
+                        data-pcolor="#000"
+                        data-scolor="#000"
+                         style={{backgroundColor:"#F2F3F5", color:"#000"}} 
+                        onClick={(e)=>{chanTheme(e)}} href="#000">theme 7 </a>
+                        </li> 
                     </ul>
                     </div>
                 </li>

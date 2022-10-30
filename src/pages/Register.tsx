@@ -1,5 +1,6 @@
 import React, { SyntheticEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useThemeContext } from "../components/context/ThemeContext";
 
 const Register = () => {
     const [firstName, setFirstName] = useState("")
@@ -7,6 +8,8 @@ const Register = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [redirect, setRedirect] = useState(false)
+
+    const theme =useThemeContext()
 
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault()
@@ -47,10 +50,10 @@ const Register = () => {
 
 
     return (
-        <div>
+        <div className="form-signin form-register-size w-200 m-auto" style={{...theme.theme?.secondary}}>
             
-            <form onSubmit={submit}>
-                    <h1 className="h3 mb-3 fw-normal">Please Register</h1>
+            <form onSubmit={submit} >
+                    <h1 className="h3 mb-3 fw-normal" >Please Register</h1>
 
                     <div className="form-floating">
                         <input type="text" className="form-control"  placeholder="Firt name"
@@ -86,6 +89,12 @@ const Register = () => {
                     <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
                     <p className="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
                 </form>
+                <div style={{...theme.theme?.primary, minWidth:"200px", minHeight:"60px"}}>
+                    This is the primary theme using react context
+                </div>
+                <div style={{...theme.theme?.secondary, minWidth:"200px", minHeight:"60px"}}>
+                    This is the secondary theme using react contex
+                </div>
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { createContext } from "react";
 import { useContext, useState, useEffect } from "react";
 import Cookies from 'js-cookie';
 import { isEnumDeclaration } from "typescript";
+import { ITask } from "../components/task/taskinterface";
 
 
 export function useAuthuser() {
@@ -14,7 +15,8 @@ export type Authuser = {
     lastName: string
     email: string
     roles: string[]
-    profileImagePath: string
+    profileImagePath: string,
+    tasks:ITask[]
 }
 
 type UserContextType = {
