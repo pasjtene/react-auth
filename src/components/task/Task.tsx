@@ -38,6 +38,7 @@ const isUserAuth = ():number =>  authUser.user?.firstName?.length || props.user?
 useEffect(()=>{
     if(authUser.user?.firstName?.length) setUser(authUser.user) 
     if(props.user?.firstName?.length) setUser(props.user) 
+
     
 })
 
@@ -157,16 +158,16 @@ const addTaskToDel = (ttd:ITask):void => {
 }
 
 const addTask = ():void => {
-
-   const td = props?.user?.tasks?.map((e:ITask)=>{
+/*
+   const td = props?.user?.tasks.map((e:ITask)=>{
     setTodoList([...todoList, e])
     })
 
-        const td2 = props?.user?.tasks?.map((e:ITask)=>{
+        const td2 = props?.user?.tasks.map((e:ITask)=>{
             if(td.length>todoList.length)
             todoList.push(e)
         })
-    
+    */
     const newTask =  {
         //id: getRandomInt(1,1000),
         id: todoList.length+1,
@@ -179,6 +180,8 @@ const addTask = ():void => {
     setTodoList([...todoList, newTask])
     setTaskName("")
     setDeadLine(0)
+
+    setTaskId(todoList.length+1)
 
 
     const newTask2 =  {
