@@ -48,14 +48,15 @@ useEffect(()=> {
 
     //this gets the user, who is set at login, and app on refresh
     const utask = Cookies.get("utasks")
+    const auth_user = Cookies.get("utasks")
 
 
-    if (utask) {
-      const  dparsed = JSON.parse(utask)
+    if (auth_user) {
+      const  dparsed = JSON.parse(auth_user)
       const t = JSON.stringify(dparsed.user)
       setUser(dparsed)
         //console.log("The user tasks from cookies...", JSON.parse(JSON.stringify(Cookies.get("utasks"))))
-        console.log("The user 3 tasks from cookies...", JSON.parse(utask))
+        console.log("The user 3 tasks from cookies...", JSON.parse(auth_user))
         console.log("The user id from cookies...", Cookies.get("uid"))
         
 
@@ -261,6 +262,33 @@ const completeTask2 = (taskToComplete: ITask):void => {
     }
 
     setDoneList([...doneList, newTask])
+
+    const newTask2 =  {
+        id: taskToComplete.id,
+        name: taskToComplete.name,
+        deadLine: taskToComplete.deadLine,
+        completed: true
+    }
+
+    {
+        try {
+            const usertasks = axios.post(AppService.app_url("/api/user/updatetask") , newTask2,
+                {
+                     headers: { 'Content-Type': 'application/json'}
+             
+               });
+    
+               usertasks.then((response) => {
+                    //const dt = JSON.parse(JSON.stringify(response.data.data.task))
+                    console.log(response.data)
+               })
+    
+        } catch(err) {
+            console.log("Got error gettings task ", err)
+        }
+    }   
+
+
 
    
    
