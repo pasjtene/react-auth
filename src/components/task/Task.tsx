@@ -297,7 +297,7 @@ const completeTask = (taskNameToDelete: string):void => {
 
                         { props.user?.tasks?.length?
                         <div>
-                                
+                             From todolist   
                             {todoList.map((task:ITask, key:number)=>{
                             
                                 return !task.completed&&<TodoTask task={task} key={key} completeTask2={completeTask2}/>
@@ -311,13 +311,10 @@ const completeTask = (taskNameToDelete: string):void => {
 
                         }
 
-                       
-
-
-
+     
                         {authUser.user?.tasks?.length?
                         <div>
-                                
+                              From authuser tasks  
                             {authUser.user.tasks.map((task:ITask, key:number)=>{
                             
                                 return !task.completed&&<TodoTask task={task} key={key} completeTask2={completeTask2}/>
@@ -329,6 +326,7 @@ const completeTask = (taskNameToDelete: string):void => {
 
                             { !todoList.length?
                             <div>
+                                From props user tasks
                             {props.user?.tasks?.map((task:ITask, key:number)=>{
                                 //todoList.length?setTodoList([...todoList, ...props.user?.tasks])
                             
