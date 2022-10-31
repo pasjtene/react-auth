@@ -176,6 +176,8 @@ const addTask = ():void => {
         completed: isTaskDone
     }
 
+    user.tasks.push(newTask)
+
     //reset values
     setTodoList([...todoList, newTask])
     setTaskName("")
@@ -215,7 +217,7 @@ const addTask = ():void => {
 
 useEffect(()=>{
     console.log("The is..",taskid)
-},[taskid,todoList])
+},[taskid])
 
 
 
@@ -223,6 +225,15 @@ const completeTask2 = (taskToComplete: ITask):void => {
     //setTodoList(todoList.filter((task)=> task.name != taskToComplete.name))
 
     console.log("The todo list le ..", todoList.length)
+
+    user.tasks.filter((t:ITask)=> {
+        if(t.name == taskToComplete.name) {
+            t.completed =true;
+            //setTodoList([...todoList])
+        }
+    } )
+
+
 
     todoList.filter((t:ITask)=> {
         if(t.name == taskToComplete.name) {
@@ -288,17 +299,10 @@ const completeTask = (taskNameToDelete: string):void => {
 
                         <div>
                           User from cookie 2:  {user?.firstName}  {user?.lastName}
-                        </div> 
-                            
-                        
-
-                        {!authUser.user?.tasks?.length?
+                          { user?.tasks?.length?
                         <div>
-
-                        { props.user?.tasks?.length?
-                        <div>
-                             From todolist   
-                            {todoList.map((task:ITask, key:number)=>{
+                             From user cookie task  
+                            {user.tasks.map((task:ITask, key:number)=>{
                             
                                 return !task.completed&&<TodoTask task={task} key={key} completeTask2={completeTask2}/>
                                 
@@ -306,43 +310,17 @@ const completeTask = (taskNameToDelete: string):void => {
                             }
                         </div>:null
                         }
-
-                        </div>:null
-
-                        }
-
-     
-                        {authUser.user?.tasks?.length?
-                        <div>
-                              From authuser tasks  
-                            {authUser.user.tasks.map((task:ITask, key:number)=>{
-                            
-                                return !task.completed&&<TodoTask task={task} key={key} completeTask2={completeTask2}/>
-                                
-                            })
-                            }
-                        </div>:null
-                        }
-
-                            { !todoList.length?
-                            <div>
-                                From props user tasks
-                            {props.user?.tasks?.map((task:ITask, key:number)=>{
-                                //todoList.length?setTodoList([...todoList, ...props.user?.tasks])
-                            
-                            return !task.completed&&<TodoTask task={task} key={key} completeTask2={completeTask2}/>
-                            })}
-                            </div>:null
-                            }
-                    
+                        </div>    
                         </div>
 
                         
                 
-
+                        
+                          Task completed from User from cookie 2: 
+                          { user?.tasks?.length?
                             <div className="todoList" style={{...theme.theme?.secondary}}>
-                                Completed tasks
-                                {todoList.map((task:ITask, key:number)=>{
+                                Completed tasks from cookies
+                                {user.tasks.map((task:ITask, key:number)=>{
                                     return task.completed&&
                                 
                                     <div key={key}>
@@ -357,7 +335,13 @@ const completeTask = (taskNameToDelete: string):void => {
                                     
                                 })}
                                 
-                            </div>
+                            </div>:null
+                            }
+
+
+
+
+
 
                         <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div className="modal-dialog">
