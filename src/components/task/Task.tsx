@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import React, { ChangeEvent,useRef, FC, SyntheticEvent, useEffect, useState } from "react";
 import { ITask } from "./taskinterface";
 import TodoTask from "./TodoTask";
 import { useThemeContext } from "../context/ThemeContext";
@@ -17,7 +17,17 @@ const SAVE_LOCAL_TASKS_URL = "http://localhost:8086/api/user/addtask";
 const Task = (props:any) => {
 const [taskName, setTaskName] = useState<string>("")
 const [deadLine, setDeadLine] = useState<number>(0);
+
+const [editTaskName, setEditTaskName] = useState<string>("")
+const [editTaskId, setEditTaskId] = useState<number>(0)
+const [savedTaskName, setSavedtaskName] = useState<string>("")
+const [editTaskdeadLine, setEditTaskDeadLine] = useState<number>(0);
 const [isTaskDone, setTaskDone] = useState<boolean>(false);
+
+const [isEditTaskDone, setEditTaskDone] = useState<string>("");
+
+
+
 const [todoList, setTodoList] = useState<ITask[]>([])
 const [doneList, setDoneList] = useState<ITask[]>([])
 const [taskToDel, setTaskToDel] = useState<ITask[]>([])
@@ -29,6 +39,8 @@ const [user2, setUser2] = useState({})
 const[taskid, setTaskId] = useState(0)
 const[taskids, setTaskIds] = useState<number[]>([])
 const theme = useThemeContext()
+
+const closemodal = useRef<HTMLButtonElement>(null);
 
 axios.defaults.withCredentials = true;
 
@@ -120,6 +132,8 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>):void => {
     }
     
 }
+
+
 
 const addTaskToDel = (ttd:ITask):void => {
 
@@ -221,6 +235,107 @@ useEffect(()=>{
 },[taskid])
 
 
+const editTask = (t:ITask):void => {
+
+    //const [editTaskId, setEditTaskId] = useState<number>(0)
+    setEditTaskId(t.id)
+    setSavedtaskName(t.name)
+    setEditTaskName(t.name)
+    setEditTaskDeadLine(t.deadLine)
+    setTaskDone(t.completed)
+
+    console.log("Task done? " ,t.completed)
+    t.completed?setEditTaskDone("Yes"):setEditTaskDone("No")
+    
+}
+
+const handleTaskCompleted = (e:SyntheticEvent,id:string)=> {
+    
+    setEditTaskDone(id)
+    if(id==="No") {
+        setTaskDone(false)
+    } else {
+        setTaskDone(true)
+    }
+    
+
+  }
+
+const handleTaskEdit = (e:ChangeEvent<HTMLInputElement>):void => {
+    if(e.target.name=="taskname") {
+        setEditTaskName(e.target.value)
+    } 
+
+    if(e.target.name=="deadline") {
+        setEditTaskDeadLine(Number(e.target.value))
+    } 
+
+    if(e.target.name=="btnradio") {
+        console.log("The radio..", e.target)
+        //setEditTaskDeadLine(Number(e.target.value))
+    }
+
+    
+  
+}
+
+const saveEditedTask = () => {
+
+   // const [editTaskName, setEditTaskName] = useState<string>("")
+   // const [editTaskId, setEditTaskId] = useState<number>(0)
+    //const [savedTaskName, setSavedtaskName] = useState<string>("")
+    //const [editTaskdeadLine, setEditTaskDeadLine] = useState<number>(0);
+    //const [isTaskDone, setTaskDone] = useState<boolean>(false);
+    
+    //const [isEditTaskDone, setEditTaskDone] = useState<string>("");
+
+
+    const editTask =  {
+        id: editTaskId,
+        name: editTaskName,
+        deadLine: editTaskdeadLine,
+        completed: isEditTaskDone=="Yes"?true:false
+    }
+
+    user.tasks.filter((t)=>{
+        if(t.id == editTaskId ){
+            t.name = editTaskName
+            t.deadLine = editTaskdeadLine
+            t.completed = isEditTaskDone=="Yes"?true:false
+        }
+    })
+
+    //This is just to for the re-render, which shows the updated task...
+    setTaskId(getRandomInt(1,10000))
+
+    try {
+        const usertasks = axios.post(AppService.app_url("/api/user/updatetask") , editTask,
+            {
+                 headers: { 'Content-Type': 'application/json'}
+         
+           });
+
+           usertasks.then((response) => {
+                //const dt = JSON.parse(JSON.stringify(response.data.data.task))
+                console.log(response.data)
+                user.tasks.filter((t)=>{
+                    if(t.id == response.data.id) {
+                        t=response.data.id
+                    }
+                })
+                setTaskId(response.data.id)
+                closemodal?.current?.click();
+           })
+
+    } catch(err) {
+        console.log("Got error gettings task ", err)
+    }
+
+
+
+
+}
+
 
 const completeTask2 = (taskToComplete: ITask):void => {
     //setTodoList(todoList.filter((task)=> task.name != taskToComplete.name))
@@ -287,11 +402,7 @@ const completeTask2 = (taskToComplete: ITask):void => {
             console.log("Got error gettings task ", err)
         }
     }   
-
-
-
-   
-   
+  
 }
 
 const completeTask = (taskNameToDelete: string):void => {
@@ -332,7 +443,10 @@ const completeTask = (taskNameToDelete: string):void => {
                              From user cookie task  
                             {user.tasks.map((task:ITask, key:number)=>{
                             
-                                return !task.completed&&<TodoTask task={task} key={key} completeTask2={completeTask2}/>
+                                return !task.completed&&<TodoTask task={task} key={key} 
+                                            completeTask2={completeTask2}
+                                            editTask= {editTask}
+                                            />
                                 
                             })
                             }
@@ -353,8 +467,9 @@ const completeTask = (taskNameToDelete: string):void => {
                                 
                                     <div key={key}>
                                         
-                                        <TodoTask task={task} completeTask2={completeTask2}/>
-                                        <button type="button" onClick={()=>addTaskToDel(task)} className="btn btn-primary" data-bs-toggle="modal" 
+                                        <TodoTask task={task} completeTask2={completeTask2} editTask={editTask}/>
+                                        <button type="button" onClick={()=>addTaskToDel(task)} className="btn btn-primary" 
+                                        data-bs-toggle="modal" 
                                         data-bs-target="#exampleModal">
                                             Delete this task
                                         </button>
@@ -366,9 +481,74 @@ const completeTask = (taskNameToDelete: string):void => {
                             </div>:null
                             }
 
+                        <div className="modal fade" id="edittask" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Editing task {savedTaskName}</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                
 
+                                <div>
+                                        <main className="form-signin form-signin-size w-100 m-auto">
+                                            <form >
+                                                <h1 className="h3 mb-3 fw-normal">Enter new task details</h1>
+                                                <div className="form-floating">
+                                                <input type="text" className="form-control"
+                                                        name="taskname" value={editTaskName}  
+                                                        
+                                                    onChange={handleTaskEdit}
+                                                />
+                                                <label className="floatingInput">Task name</label>
+                                                </div>
+                                                <div className="form-floating">
+                                                <input type="number" className="form-control" 
+                                                name="deadline" 
+                                                value={editTaskdeadLine}
+                                                    onChange={handleTaskEdit}
+                                                />
+                                                 <label className="floatingInput">Task deadline</label>
+                                                </div>
+                                                <div >
+                                                    is the task completed?: {isEditTaskDone}
+                                                </div>
+                                                <div className="btn-group"  role="group" aria-label="Basic radio toggle button group">
+                                                    <input type="radio"
+                                                    onClick={e=> handleTaskCompleted(e, e.currentTarget.id)} className="btn-check" 
+                                                    name="btnradio" 
+                                                    id="Yes"
+                                                    checked={isTaskDone === true}
+                                                    />
+                                                    <label className="btn btn-outline-primary" htmlFor="Yes" >Yes</label>
 
+                                                    <input type="radio"  checked={isTaskDone === false}
+                                                     onClick={e=> handleTaskCompleted(e, e.currentTarget.id)} 
+                                                     className="btn-check" 
+                                                     name="btnradio" 
+                                                    id="No" />
+                                                    <label className="btn btn-outline-primary" htmlFor="No">No</label>
 
+                                            
+                                                </div>
+                                                
+                                            </form>
+                                        </main>
+                                    </div>
+                               
+
+                            
+                                </div>
+
+                               
+                            <div className="modal-footer">
+                                <button type="button" ref={closemodal}  className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" className="btn btn-primary" onClick={saveEditedTask}>Save changes</button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
 
 
                         <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
