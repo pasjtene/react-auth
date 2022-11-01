@@ -91,6 +91,15 @@
     /*background-color:rgb(234, 250, 255);*/
 }
 
+.deletetask {
+    color:rgb(29, 155, 240);
+}
+
+.deletetask:hover {
+    color:tomato;
+    cursor: pointer;
+}
+
 .task .content span {
     display: grid;
     place-items: center;

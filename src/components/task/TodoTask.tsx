@@ -22,7 +22,7 @@ const TodoTask = ({task, completeTask2,editTask} :Props) => {
                 <span>
                 {task.name}
                 </span>
-                <span>
+                <span style={{width:"100px"}}>
                 {task.deadLine}
                 </span>
             </div>

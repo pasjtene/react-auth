@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 import { Authuser, useAuthuser } from "../../user/UserContext";
 import AppService from "../../services/AppService";
+import TaskService from "./TaskService";
  
 const LOCAL_TASKS_URL = "http://localhost:8086/api/user/tasks";
 const TASKS_URL = "http://51.68.196.188:8080/talodu/api/user/tasks";
@@ -274,22 +275,76 @@ const handleTaskEdit = (e:ChangeEvent<HTMLInputElement>):void => {
         console.log("The radio..", e.target)
         //setEditTaskDeadLine(Number(e.target.value))
     }
-
-    
-  
 }
 
+const [confirmDelete, setConfirmDelete] =useState(0)
+const [errorDeleting, setErrorDeleting] = useState("")
+const [successDeleting, setSuccessDeleting] = useState("")
+
+const handleDeleteTask = () => {
+    setConfirmDelete(confirmDelete + 1)
+
+   
+
+    const editTask =  {
+        id: editTaskId,
+        name: editTaskName,
+        deadLine: editTaskdeadLine,
+        completed: isEditTaskDone=="Yes"?true:false
+    }
+
+    let taskIds: number[] =[]
+    user.tasks.filter((ta:ITask)=>{
+        taskIds.push(ta.id)
+        })
+
+    user.tasks.filter((t:ITask)=> 
+    {
+       
+     if(t.id == editTaskId){
+        const index = taskIds.indexOf(editTaskId);
+        console.log("The index ", index)
+        if (index > -1) { // only splice array when item is found
+
+            //we only remove whent he user clicks 3 times
+            if(confirmDelete >= 3) {
+                user.tasks.splice(index, 1); 
+                setConfirmDelete(0)
+            }
+            
+
+        }
+      }
+        
+ }
+    )
+
+
+    //This is just to for the re-render, which shows the updated task...
+    setTaskId(getRandomInt(1,10000));
+    if(confirmDelete >= 3) {
+        (async() => {
+            let apiRes = null;
+            try {
+              apiRes = await TaskService.deleteTask(editTaskId);
+                setSuccessDeleting("Task was deleted successfully")
+                setTimeout(()=>{
+                    closemodal?.current?.click();
+                },4000)
+              
+            } catch (err) {
+                setErrorDeleting("Task was not deleted on the sever... error are you logged in?")
+            } finally {
+              console.log(apiRes);
+            }
+          })();
+    }
+   
+}
+
+
+
 const saveEditedTask = () => {
-
-   // const [editTaskName, setEditTaskName] = useState<string>("")
-   // const [editTaskId, setEditTaskId] = useState<number>(0)
-    //const [savedTaskName, setSavedtaskName] = useState<string>("")
-    //const [editTaskdeadLine, setEditTaskDeadLine] = useState<number>(0);
-    //const [isTaskDone, setTaskDone] = useState<boolean>(false);
-    
-    //const [isEditTaskDone, setEditTaskDone] = useState<string>("");
-
-
     const editTask =  {
         id: editTaskId,
         name: editTaskName,
@@ -330,9 +385,6 @@ const saveEditedTask = () => {
     } catch(err) {
         console.log("Got error gettings task ", err)
     }
-
-
-
 
 }
 
@@ -500,6 +552,9 @@ const completeTask = (taskNameToDelete: string):void => {
                                                         name="taskname" value={editTaskName}  
                                                         
                                                     onChange={handleTaskEdit}
+                                                    style={{marginBottom:"20px"}}
+
+                                                
                                                 />
                                                 <label className="floatingInput">Task name</label>
                                                 </div>
@@ -514,17 +569,20 @@ const completeTask = (taskNameToDelete: string):void => {
                                                 <div >
                                                     is the task completed?: {isEditTaskDone}
                                                 </div>
+                                                
                                                 <div className="btn-group"  role="group" aria-label="Basic radio toggle button group">
                                                     <input type="radio"
-                                                    onClick={e=> handleTaskCompleted(e, e.currentTarget.id)} className="btn-check" 
+                                                    className="btn-check" 
+                                                    onChange={e=> handleTaskCompleted(e, e.currentTarget.id)}
                                                     name="btnradio" 
                                                     id="Yes"
                                                     checked={isTaskDone === true}
                                                     />
                                                     <label className="btn btn-outline-primary" htmlFor="Yes" >Yes</label>
 
-                                                    <input type="radio"  checked={isTaskDone === false}
-                                                     onClick={e=> handleTaskCompleted(e, e.currentTarget.id)} 
+                                                    <input type="radio"  checked={isTaskDone === false} 
+                                                     onChange={e=> handleTaskCompleted(e, e.currentTarget.id)}
+                                                     
                                                      className="btn-check" 
                                                      name="btnradio" 
                                                     id="No" />
@@ -536,15 +594,37 @@ const completeTask = (taskNameToDelete: string):void => {
                                             </form>
                                         </main>
                                     </div>
-                               
-
-                            
                                 </div>
 
+
                                
+
+                                {confirmDelete?<div style={{color:"red"}}>
+                                    Delete task? This action is ireversible. <div>You must click 3 times to delete {confirmDelete}</div> 
+                                    </div>:null}
+
+                                    <div>
+                                         {successDeleting}
+                                    </div>
+                                    <div>
+                                    {errorDeleting}
+                                    </div>
+
                             <div className="modal-footer">
-                                <button type="button" ref={closemodal}  className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary" onClick={saveEditedTask}>Save changes</button>
+                            <div className="d-flex  align-items-start flex-grow-1" >
+
+                                        <div className="p-2 d-flex align-items-start flex-grow-1 bd-highlight">
+                                            <span className="deletetask" onClick={handleDeleteTask}>Delete task</span>
+                                        </div>
+
+                                        <div className="p-2 bd-highlight" >
+                                            <button type="button" ref={closemodal}  className="btn btn-secondary m-2" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" className="btn btn-primary" onClick={saveEditedTask}>Save changes</button>
+                                        </div>
+                                
+                                </div>
+                                
+                               
                             </div>
                             </div>
                         </div>
